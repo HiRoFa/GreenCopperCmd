@@ -1,0 +1,17 @@
+[package]
+name = "GreenCopperCmd"
+version = "0.1.0"
+authors = ["Andries Hiemstra <info@hirofa.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+
+green_copper_runtime =  { git = 'https://github.com/HiRoFa/GreenCopperRuntime', branch="main", features = ["all"]}
+quickjs_runtime = "0.2.1"
+
+log = "0.4"
+simple_logger = "1.3.0"
+cmdparser = "0.2.0"
+rustyline = "6.3.0"
