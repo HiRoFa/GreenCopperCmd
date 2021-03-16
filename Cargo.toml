@@ -8,8 +8,8 @@ edition = "2018"
 
 [dependencies]
 
-green_copper_runtime =  { git = 'https://github.com/HiRoFa/GreenCopperRuntime', branch="main", features = ["all"]}
-#green_copper_runtime =  { path = '../GreenCopperRuntime', features = ["all"]}
+#green_copper_runtime =  { git = 'https://github.com/HiRoFa/GreenCopperRuntime', branch="main", features = ["all"]}
+green_copper_runtime =  { path = '../GreenCopperRuntime', features = ["all"]}
 quickjs_runtime = "0.2.1"
 
 log = "0.4"

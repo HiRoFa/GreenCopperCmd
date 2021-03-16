@@ -9,6 +9,7 @@ use rustyline::Editor;
 use std::fs;
 use green_copper_runtime::moduleloaders::{HttpModuleLoader, FileSystemModuleLoader};
 use quickjs_runtime::esruntime::EsRuntime;
+use green_copper_runtime::fetch::fetch_response_provider;
 
 fn main() {
 
@@ -31,8 +32,8 @@ fn main() {
     let wsl = HttpModuleLoader::new()
         .secure_only();
 
-
     let rt = green_copper_runtime::new_greco_rt_builder()
+        .fetch_response_provider(fetch_response_provider)
         .script_module_loader(Box::new(fsl))
         .script_module_loader(Box::new(wsl))
         .build();
