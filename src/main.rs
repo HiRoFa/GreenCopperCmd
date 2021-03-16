@@ -7,9 +7,11 @@ use quickjs_runtime::esscript::EsScript;
 use rustyline::error::ReadlineError;
 use rustyline::Editor;
 use std::fs;
+use green_copper_runtime::moduleloaders::{HttpModuleLoader, FileSystemModuleLoader};
+use quickjs_runtime::esruntime::EsRuntime;
 
 fn main() {
-    //simple_logger::init().unwrap();
+
     let (arguments, flags) = Parser::new().merge_values(true).parse();
 
     if flags.contains(&"v".to_string()) {
@@ -25,13 +27,14 @@ fn main() {
             .unwrap();
     }
 
-    let m_loader = MultiScriptLoader::new()
-        .add(FileScriptLoader::new("./scripts"))
-        .add(WebScriptLoader::new());
+    let fsl = FileSystemModuleLoader::new("./scripts");
+    let wsl = HttpModuleLoader::new()
+        .secure_only();
 
-    let prt = ParallelRuntimeBuilder::new()
-        .thread_count(1)
-        .script_loader(m_loader)
+
+    let rt = green_copper_runtime::new_greco_rt_builder()
+        .script_module_loader(Box::new(fsl))
+        .script_module_loader(Box::new(wsl))
         .build();
 
     let f_opt = arguments.get("f");
@@ -42,7 +45,7 @@ fn main() {
                 let contents = read_res.ok().unwrap();
                 trace!("evaluating: {}", contents);
                 let res =
-                    prt.eval_module_sync(EsScript::new(file_name_string.as_str(), contents.as_str()));
+                    rt.eval_module_sync(EsScript::new(format!("file:///{}", file_name_string.as_str()).as_str(), contents.as_str()));
                 if res.is_err() {
                     error!("error in eval_module_sync: {}", res.err().unwrap());
                 }
@@ -55,15 +58,15 @@ fn main() {
     }
 
     if flags.contains(&"i".to_string()) {
-        interactive_mode(&prt);
+        interactive_mode(&rt);
     }
 }
 
-fn interactive_mode(prt: &ParallelRuntime) {
+fn interactive_mode(rt: &EsRuntime) {
     println!("press CTRL-D or CTRL-C to exit GreCo...");
 
     let mut rl = Editor::<()>::new();
-    if rl.load_history("history.txt").is_err() {
+    if rl.load_history("greco_history.txt").is_err() {
         // println!("No previous history.");
     }
 
@@ -73,7 +76,7 @@ fn interactive_mode(prt: &ParallelRuntime) {
             Ok(line) => {
                 rl.add_history_entry(line.as_str());
 
-                let res = prt.eval_sync(EsScript::new("input.es", line.as_str()));
+                let res = rt.eval_sync(EsScript::new("input.es", line.as_str()));
                 match res {
                     Ok(esvf) => {
                         println!("{:?}", esvf);
@@ -97,7 +100,7 @@ fn interactive_mode(prt: &ParallelRuntime) {
             }
         }
     }
-    rl.save_history("history.txt").unwrap();
+    rl.save_history("greco_history.txt").unwrap();
 }
 
 #[cfg(test)]

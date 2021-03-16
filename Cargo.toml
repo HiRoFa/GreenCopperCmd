@@ -1,5 +1,5 @@
 [package]
-name = "GreenCopperCmd"
+name = "green_copper_cmd"
 version = "0.1.0"
 authors = ["Andries Hiemstra <info@hirofa.com>"]
 edition = "2018"
@@ -9,9 +9,14 @@ edition = "2018"
 [dependencies]
 
 green_copper_runtime =  { git = 'https://github.com/HiRoFa/GreenCopperRuntime', branch="main", features = ["all"]}
+#green_copper_runtime =  { path = '../GreenCopperRuntime', features = ["all"]}
 quickjs_runtime = "0.2.1"
 
 log = "0.4"
 simple_logger = "1.3.0"
 cmdparser = "0.2.0"
 rustyline = "6.3.0"
+
+[[bin]]
+name = "greco"
+path = "src/main.rs"
