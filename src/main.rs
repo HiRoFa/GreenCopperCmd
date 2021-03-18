@@ -28,7 +28,7 @@ fn main() {
             .unwrap();
     }
 
-    let fsl = FileSystemModuleLoader::new("./scripts");
+    let fsl = FileSystemModuleLoader::new("./");
     let wsl = HttpModuleLoader::new()
         .secure_only();
 
@@ -108,7 +108,7 @@ fn interactive_mode(rt: &EsRuntime) {
 pub mod tests {
     #[test]
     fn test_cmd() {
-        // todo refactor main so we can also start with args from test
+        // todo refactor main so we can also start with args from scripts
         assert_eq!(1, 1);
     }
 }
