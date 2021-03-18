@@ -1,3 +1,5 @@
+// this one is work in progress, once i get a grip on steppers and servo's i'll get back to this one
+
 async function initRobot() {
     // import robotics module
     let robotics = await import('https://raw.githubusercontent.com/HiRoFa/robotics/main/robot.mes');

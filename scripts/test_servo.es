@@ -1,5 +1,5 @@
 async function test(){
-    let servoMod = await import('https://raw.githubusercontent.com/HiRoFa/ESsesLib-q/main/modules/io/gpio/servo.mes');
+    let servoMod = await import('https://raw.githubusercontent.com/HiRoFa/GreenCopperRuntime/main/modules/io/gpio/servo.mes');
 
     let frequency = 50;
     let left = 2;
