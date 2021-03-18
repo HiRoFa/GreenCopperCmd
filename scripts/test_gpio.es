@@ -32,10 +32,11 @@
     async function test_gpio() {
         console.log('init pins');
 
-        let pin_set2 = new esses.io.gpio.PinSet();
+        let gpio_mod = await import('greco://gpio');
+
+        let pin_set2 = new gpio_mod.PinSet();
 
         await pin_set2.init('/dev/gpiochip0', 'out', [23, 24, 25, 4]);
-
 
         console.log('setting states 2 to 1');
         await pin_set2.setState([1, 1, 1, 1]);
