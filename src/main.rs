@@ -30,6 +30,7 @@ fn main() {
 
     let fsl = FileSystemModuleLoader::new("./");
     let wsl = HttpModuleLoader::new()
+        .validate_content_type(false)
         .secure_only();
 
     let rt = green_copper_runtime::new_greco_rt_builder()
