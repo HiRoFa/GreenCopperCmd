@@ -8,12 +8,17 @@ async function test(){
 
     let servo = await servoMod.Servo.init('/dev/gpiochip0', 12, frequency, left, neutral, right);
 
+    console.log("going left");
     await servo.left();
+    console.log("going right");
     await servo.right();
+    console.log("going left");
     await servo.left();
+    console.log("going right");
     await servo.right();
+    console.log("going neutral");
     await servo.neutral();
-
+    console.log("going off");
     await servo.off();
 
 };

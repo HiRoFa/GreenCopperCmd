@@ -17,13 +17,14 @@ fn main() {
 
     if flags.contains(&"v".to_string()) {
         simple_logger::SimpleLogger::new()
+            .with_module_level("quickjs_runtime::features::console", LevelFilter::max())
             .with_level(LevelFilter::Trace)
             .init()
             .unwrap();
     } else {
         simple_logger::SimpleLogger::new()
             .with_level(LevelFilter::Info)
-            .with_module_level("ureq::unit", LevelFilter::Error)
+            .with_module_level("quickjs_runtime::features::console", LevelFilter::max())
             .init()
             .unwrap();
     }
