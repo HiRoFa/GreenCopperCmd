@@ -3,13 +3,13 @@ extern crate cmdparser;
 use cmdparser::Parser;
 use log::trace;
 use log::{error, LevelFilter};
-use quickjs_runtime::esscript::EsScript;
 use rustyline::error::ReadlineError;
 use rustyline::Editor;
 use std::fs;
 use green_copper_runtime::moduleloaders::{HttpModuleLoader, FileSystemModuleLoader};
 use quickjs_runtime::esruntime::EsRuntime;
 use green_copper_runtime::fetch::fetch_response_provider;
+use quickjs_runtime::esscript::EsScript;
 
 fn main() {
 

@@ -10,7 +10,9 @@ edition = "2018"
 
 green_copper_runtime =  { git = 'https://github.com/HiRoFa/GreenCopperRuntime', branch="main", features = ["all"]}
 #green_copper_runtime =  { path = '../GreenCopperRuntime', features = ["all"]}
-quickjs_runtime = "0.2.1"
+#quickjs_runtime = "0.2.1"
+#quickjs_runtime =  { path = '../quickjs_es_runtime'}
+quickjs_runtime = { git = 'https://github.com/HiRoFa/quickjs_es_runtime' }
 
 log = "0.4"
 simple_logger = "1.3.0"
