@@ -1,22 +1,18 @@
+function waitASec(){
+    return new Promise((resolve, reject) => {
+        setTimeout(resolve, 1000);
+    });
+}
+
 async function test(){
     let ledMod = await import('https://raw.githubusercontent.com/HiRoFa/GreenCopperRuntime/main/modules/io/gpio/led.mes');
     let led = await ledMod.Led.init('/dev/gpiochip0', 20);
-    //await led.blink(5).catch((ex) => {
-    //    console.error(ex);
-    //});
-    await led.on();
-    setTimeout(() => {
-        console.log("going off");
-        led.off();
-    }, 1000);
-    setTimeout(() => {
-        console.log("going on");
-        led.on();
-    }, 2000);
-    setTimeout(() => {
-        console.log("going off");
-        led.off();
-    }, 3000);
+    for (let x = 0; x < 10; x++) {
+        await led.on();
+        await waitASec();
+        await led.off();
+        await waitASec();
+    }
 };
 
 console.log("starting");
