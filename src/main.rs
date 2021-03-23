@@ -18,6 +18,7 @@ fn main() {
     if flags.contains(&"v".to_string()) {
         simple_logger::SimpleLogger::new()
             .with_module_level("quickjs_runtime::features::console", LevelFilter::max())
+            .with_module_level("ureq::unit", LevelFilter::Error)
             .with_level(LevelFilter::Trace)
             .init()
             .unwrap();
@@ -25,6 +26,7 @@ fn main() {
         simple_logger::SimpleLogger::new()
             .with_level(LevelFilter::Info)
             .with_module_level("quickjs_runtime::features::console", LevelFilter::max())
+            .with_module_level("ureq::unit", LevelFilter::Error)
             .init()
             .unwrap();
     }
