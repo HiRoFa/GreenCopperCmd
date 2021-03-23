@@ -5,8 +5,9 @@ async function test(){
     let left = 2;
     let neutral = 7;
     let right = 12;
+    let fullMotionSecs = 0.35;
 
-    let servo = await servoMod.Servo.init('/dev/gpiochip0', 12, frequency, left, neutral, right);
+    let servo = await servoMod.Servo.init('/dev/gpiochip0', 12, frequency, left, neutral, right, 180, fullMotionSecs);
 
     console.log("going left");
     await servo.left();
