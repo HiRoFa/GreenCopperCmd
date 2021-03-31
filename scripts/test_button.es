@@ -1,20 +1,27 @@
 
-let pin_set;
+let global = this;
 // some raw pinset testing
 async function test_gpio_in() {
     console.log('init pins');
 
     let gpio_mod = await import('greco://gpio');
 
-    pin_set = new gpio_mod.PinSet();
+    global.pin_set = new gpio_mod.PinSet();
 
-    await pin_set.init('/dev/gpiochip0', 'in', [21, 24]);
+    await global.pin_set.init('/dev/gpiochip0', 'in', [21, 24]);
 
 }
 
 console.log("starting");
 test_gpio_in().then((r) => {
     console.log("done");
+
+    setTimeout(() => {
+        console.log("dropping pin_set");
+        global.pin_set = null;
+        console.log("dropped pin_set");
+    }, 10000);
+
 }).catch((ex) => {
     console.error("fail %s", "" + ex);
 });
