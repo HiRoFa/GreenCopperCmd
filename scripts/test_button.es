@@ -8,7 +8,7 @@ async function test_gpio_in() {
 
     pin_set = new gpio_mod.PinSet();
 
-    await pin_set2.init('/dev/gpiochip0', 'in', [21, 24]);
+    await pin_set.init('/dev/gpiochip0', 'in', [21, 24]);
 
 }
 
