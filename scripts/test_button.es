@@ -11,10 +11,10 @@ async function test_gpio_in() {
     await global.pin_set.init('/dev/gpiochip0', 'in', [21, 24]);
 
     global.pin_set.addEventListener("falling", (evt) => {
-        console.log("falling");
+        console.log("falling %s", evt.pin);
     });
     global.pin_set.addEventListener("rising", (evt) => {
-        console.log("rising");
+        console.log("rising %s", evt.pin);
     });
 
     setTimeout(() => {
