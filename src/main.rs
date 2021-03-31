@@ -10,6 +10,7 @@ use green_copper_runtime::moduleloaders::{HttpModuleLoader, FileSystemModuleLoad
 use quickjs_runtime::esruntime::EsRuntime;
 use green_copper_runtime::fetch::fetch_response_provider;
 use quickjs_runtime::esscript::EsScript;
+use quickjs_runtime::quickjs_utils::modules::detect_module;
 
 fn main() {
 
@@ -49,10 +50,19 @@ fn main() {
             if read_res.is_ok() {
                 let contents = read_res.ok().unwrap();
                 trace!("evaluating: {}", contents);
-                let res =
-                    rt.eval_module_sync(EsScript::new(format!("file:///{}", file_name_string.as_str()).as_str(), contents.as_str()));
+                let is_module = detect_module(contents.as_str());
+
+                let res = match is_module {
+                    true => {
+                        rt.eval_module_sync(EsScript::new(format!("file:///{}", file_name_string.as_str()).as_str(), contents.as_str()))
+                    }
+                    false => {
+                        rt.eval_sync(EsScript::new(format!("file:///{}", file_name_string.as_str()).as_str(), contents.as_str()))
+                    }
+                };
+
                 if res.is_err() {
-                    error!("error in eval_module_sync: {}", res.err().unwrap());
+                    error!("error during eval: {}", res.err().unwrap());
                 }
             } else {
                 error!("could not read file {}", read_res.err().unwrap());
