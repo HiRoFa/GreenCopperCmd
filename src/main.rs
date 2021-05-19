@@ -9,8 +9,8 @@ use std::fs;
 use green_copper_runtime::moduleloaders::{HttpModuleLoader, FileSystemModuleLoader};
 use quickjs_runtime::esruntime::EsRuntime;
 use green_copper_runtime::fetch::fetch_response_provider;
-use quickjs_runtime::esscript::EsScript;
 use quickjs_runtime::quickjs_utils::modules::detect_module;
+use hirofa_utils::js_utils::Script;
 
 fn main() {
 
@@ -54,10 +54,10 @@ fn main() {
 
                 let res = match is_module {
                     true => {
-                        rt.eval_module_sync(EsScript::new(format!("file:///{}", file_name_string.as_str()).as_str(), contents.as_str()))
+                        rt.eval_module_sync(Script::new(format!("file:///{}", file_name_string.as_str()).as_str(), contents.as_str()))
                     }
                     false => {
-                        rt.eval_sync(EsScript::new(format!("file:///{}", file_name_string.as_str()).as_str(), contents.as_str()))
+                        rt.eval_sync(Script::new(format!("file:///{}", file_name_string.as_str()).as_str(), contents.as_str()))
                     }
                 };
 
@@ -91,7 +91,17 @@ fn interactive_mode(rt: &EsRuntime) {
             Ok(line) => {
                 rl.add_history_entry(line.as_str());
 
-                let res = rt.eval_sync(EsScript::new("input.es", line.as_str()));
+                let is_module = detect_module(line.as_str());
+
+                let res = match is_module {
+                    true => {
+                        rt.eval_module_sync(Script::new("input.es", line.as_str()))
+                    }
+                    false => {
+                        rt.eval_sync(Script::new("input.es", line.as_str()))
+                    }
+                };
+
                 match res {
                     Ok(esvf) => {
                         println!("{:?}", esvf);
