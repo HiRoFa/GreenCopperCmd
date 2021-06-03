@@ -37,10 +37,13 @@ fn main() {
         .validate_content_type(false)
         .secure_only();
 
+    let ts_pp = typescript_utils::TypeScriptPreProcessor::new();
+
     let rt = green_copper_runtime::new_greco_rt_builder()
         .fetch_response_provider(fetch_response_provider)
         .script_module_loader(Box::new(fsl))
         .script_module_loader(Box::new(wsl))
+        .script_pre_processor(ts_pp)
         .build();
 
     let f_opt = arguments.get("f");

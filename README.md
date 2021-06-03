@@ -4,6 +4,24 @@ The green_copper_cmd project is a commandline JavaScript interpreter which uses 
 
 For a list of features that work in script here you should check out the [GreenCopperRuntime](https://github.com/HiRoFa/GreenCopperRuntime) project.
 
+## TypeScript
+
+Supports typescript, you can run .ts files or use .mts modules
+
+## ifdef and env vars
+
+You can use  ifdef and env vars like this
+
+```javascript
+#ifdef $GRECO_TEST
+   console.log("test mode active") 
+#endif
+#ifdef $GRECO_RELEASE
+   console.log("release mode active") 
+#endif
+console.log("path = $PATH");
+```
+
 ## Modules and fetch api
 
 Loading modules from https locations and the fetch api are enabled by default.
