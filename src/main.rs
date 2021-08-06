@@ -11,6 +11,7 @@ use quickjs_runtime::esruntime::EsRuntime;
 use green_copper_runtime::fetch::fetch_response_provider;
 use quickjs_runtime::quickjs_utils::modules::detect_module;
 use hirofa_utils::js_utils::Script;
+use quickjs_runtime::esruntimebuilder::EsRuntimeBuilder;
 
 fn main() {
 
@@ -39,12 +40,15 @@ fn main() {
 
     let ts_pp = typescript_utils::TypeScriptPreProcessor::new();
 
-    let rt = green_copper_runtime::new_greco_rt_builder()
+    let mut rt_builder = EsRuntimeBuilder::new()
         .fetch_response_provider(fetch_response_provider)
         .script_module_loader(Box::new(fsl))
         .script_module_loader(Box::new(wsl))
-        .script_pre_processor(ts_pp)
-        .build();
+        .script_pre_processor(ts_pp);
+
+    green_copper_runtime::features::js_console::init(&mut rt_builder);
+
+    let rt = rt_builder.build();
 
     let f_opt = arguments.get("f");
     if let Some(f) = f_opt {
