@@ -7,11 +7,13 @@ use rustyline::error::ReadlineError;
 use rustyline::Editor;
 use std::fs;
 use green_copper_runtime::moduleloaders::{HttpModuleLoader, FileSystemModuleLoader};
-use quickjs_runtime::esruntime::EsRuntime;
-use green_copper_runtime::fetch::fetch_response_provider;
-use quickjs_runtime::quickjs_utils::modules::detect_module;
 use hirofa_utils::js_utils::Script;
-use quickjs_runtime::esruntimebuilder::EsRuntimeBuilder;
+use quickjs_runtime::quickjs_utils::modules::detect_module;
+use futures::executor::block_on;
+use hirofa_utils::js_utils::facades::{JsRuntimeBuilder, JsRuntimeFacade};
+use quickjs_runtime::builder::QuickJsRuntimeBuilder;
+use quickjs_runtime::facades::QuickJsRuntimeFacade;
+use hirofa_utils::js_utils::facades::values::JsValueFacade;
 
 fn main() {
 
@@ -40,13 +42,14 @@ fn main() {
 
     let ts_pp = typescript_utils::TypeScriptPreProcessor::new();
 
-    let mut rt_builder = EsRuntimeBuilder::new()
-        .fetch_response_provider(fetch_response_provider)
-        .script_module_loader(Box::new(fsl))
-        .script_module_loader(Box::new(wsl))
-        .script_pre_processor(ts_pp);
+    let rt_builder = QuickJsRuntimeBuilder::new()
+        .js_script_module_loader(fsl)
+        .js_script_module_loader(wsl)
+        .js_script_pre_processor(ts_pp);
 
-    green_copper_runtime::features::js_console::init(&mut rt_builder);
+    // todo greco should add a httpsecurity module to the builder
+    // or a httpclientfactory, used for modules an fetch (or split those two so we can prevent modules being loaded from a data provider)
+    let rt_builder = green_copper_runtime::init_greco_rt(rt_builder);
 
     let rt = rt_builder.build();
 
@@ -84,7 +87,7 @@ fn main() {
     }
 }
 
-fn interactive_mode(rt: &EsRuntime) {
+fn interactive_mode(rt: &QuickJsRuntimeFacade) {
     println!("press CTRL-D or CTRL-C to exit GreCo...");
 
     let mut rl = Editor::<()>::new();
@@ -102,16 +105,16 @@ fn interactive_mode(rt: &EsRuntime) {
 
                 let res = match is_module {
                     true => {
-                        rt.eval_module_sync(Script::new("input.es", line.as_str()))
+                        block_on(rt.js_eval_module(None, Script::new("input.mjs", line.as_str()))).map(|_| JsValueFacade::Null)
                     }
                     false => {
-                        rt.eval_sync(Script::new("input.es", line.as_str()))
+                        block_on(rt.js_eval(None, Script::new("input.js", line.as_str())))
                     }
                 };
 
                 match res {
-                    Ok(esvf) => {
-                        println!("{:?}", esvf);
+                    Ok(jsvf) => {
+                        println!("{:?}", jsvf.stringify());
                     }
                     Err(e) => {
                         println!("{}", e);
