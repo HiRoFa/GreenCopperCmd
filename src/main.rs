@@ -14,6 +14,7 @@ use hirofa_utils::js_utils::facades::{JsRuntimeBuilder, JsRuntimeFacade};
 use quickjs_runtime::builder::QuickJsRuntimeBuilder;
 use quickjs_runtime::facades::QuickJsRuntimeFacade;
 use hirofa_utils::js_utils::facades::values::JsValueFacade;
+use typescript_utils::TargetVersion;
 
 fn main() {
 
@@ -40,7 +41,7 @@ fn main() {
         .validate_content_type(false)
         .secure_only();
 
-    let ts_pp = typescript_utils::TypeScriptPreProcessor::new();
+    let ts_pp = typescript_utils::TypeScriptPreProcessor::new(TargetVersion::Es2020, false, false);
 
     let rt_builder = QuickJsRuntimeBuilder::new()
         .js_script_module_loader(fsl)
