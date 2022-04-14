@@ -43,11 +43,11 @@ cargo run -- -f scripts/test_led.ts -i
 
 running with a script
 
-```greco test.es```
+```greco test.ts```
 
 continue running after script has completed (interactive mode)
 
-```greco -i test.es```
+```greco -i test.ts```
 
 or without using a file
 
