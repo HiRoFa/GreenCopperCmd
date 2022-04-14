@@ -6,7 +6,7 @@ For a list of features that work in script here you should check out the [GreenC
 
 ## TypeScript
 
-Supports typescript, you can run .ts files or use .mts modules
+Supports typescript, you can run .ts files or use .ts modules
 
 ## ifdef and env vars
 
@@ -29,10 +29,13 @@ Loading modules from https locations and the fetch api are enabled by default.
 ## Getting started on Raspberry PI with GPIO
 
 I use this project a lot for GPIO stuff on my Raspberry Pi powered robots, if you connect a Led to GPIO pin 20 this little test should make it blink twice
+
+NB: This project only works on [a 64 bit OS](https://www.raspberrypi.com/news/raspberry-pi-os-64-bit/)!
+
 ```bash
 git clone https://github.com/HiRoFa/GreenCopperCmd
 cd GreenCopperCmd
-cargo run -- -f scripts/test_led.es -i 
+cargo run -- -f scripts/test_led.ts -i 
 ```
 
 

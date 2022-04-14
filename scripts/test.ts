@@ -1,12 +1,17 @@
-interface Foo {
-    a(a: String);
-}
 
-class Test implements Foo {
-    a(a: String) {
-        return a + "running TypeScript";
-    }
-}
+console.log("start");
 
-let t = new Test();
-console.log(t.a("i am "));
+import("test_module.ts")
+.then((module) => {
+    console.log("module was loaded");
+    console.log("hello world from test.ts, 5 * 6 = %s", module.mltpl(5, 6));
+    let i = new module.SubClass();
+    console.log(i.yup());
+}).catch((ex) => {
+    console.log("failure: " + ex);
+});
+
+console.log("end of file");
+
+
+
