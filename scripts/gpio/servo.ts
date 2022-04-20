@@ -134,7 +134,7 @@ export class SoftPwmDriver extends ServoDriver {
         await this.pinSet.init(this.chip, 'out', [this.pinNum]);
     }
 
-    softPwm(frequency: number, dutyCycle: number) {
+    async softPwm(frequency: number, dutyCycle: number): Promise<void> {
         console.trace("softPwm %s, %s", frequency, dutyCycle);
         this.pinSet.softPwm(frequency, dutyCycle);
         // todo calc
