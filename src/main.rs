@@ -106,10 +106,10 @@ fn interactive_mode(rt: &QuickJsRuntimeFacade) {
 
                 let res = match is_module {
                     true => {
-                        block_on(rt.js_eval_module(None, Script::new("input.mjs", line.as_str()))).map(|_| JsValueFacade::Null)
+                        block_on(rt.js_eval_module(None, Script::new("file:///input.ts", line.as_str()))).map(|_| JsValueFacade::Null)
                     }
                     false => {
-                        block_on(rt.js_eval(None, Script::new("input.js", line.as_str())))
+                        block_on(rt.js_eval(None, Script::new("file:///input.ts", line.as_str())))
                     }
                 };
 
