@@ -18,9 +18,13 @@ async function test() {
     let pinSet = new PinSet();
     await pinSet.init("/dev/gpiochip0", 'out', [24]);
 
-    await softPwm(pinSet, 50, 2, 5000);
+    for (let x = 1; x < 4; x += 0.1) {
+        console.log("x=%s", x);
+        await softPwm(pinSet, 50, x, 1000);
+        await pinSet.softPwmOff();
+    }
 
-    await pinSet.softPwmOff();
+
 
 };
 
