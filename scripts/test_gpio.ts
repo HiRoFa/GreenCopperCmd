@@ -2,7 +2,7 @@
     // test a stepper motor
      async function test_stepper(){
         // load the Stepper class
-        let stepperMod = await import('https://raw.githubusercontent.com/HiRoFa/GreenCopperRuntime/main/modules/io/gpio/stepper.mes');
+        let stepperMod = await import('./gpio/stepper.ts');
         // init a Stepper
         let myStepper = await stepperMod.Stepper.init('/dev/gpiochip0', 23, 24, 25, 4);
         // do 10 steps, forward, 2ms delay, HALF step sequence
@@ -19,7 +19,7 @@
     // led testing
     async function test_led(){
         // load the Led class
-        let ledMod = await import('https://raw.githubusercontent.com/HiRoFa/GreenCopperRuntime/main/modules/io/gpio/led.mes');
+        let ledMod = await import('./gpio/led.mes');
         // init an Led
         let myLed = await ledMod.Led.init('/dev/gpiochip0', 17);
         // blink for 5 seconds

@@ -1,8 +1,8 @@
-import {Utils as utils} from 'https://raw.githubusercontent.com/HiRoFa/GreenCopperRuntime/main/modules/utils/utils.mes';
+import { Utils as utils } from './utils/utils';
 
 async function initRobot() {
     // import robotics module
-    let robotics = await import('https://raw.githubusercontent.com/HiRoFa/robotics/main/robot.mes');
+    let robotics = await import('./robotics/robot');
 
 
     // init steppers and servos
