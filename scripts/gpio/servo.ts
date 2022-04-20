@@ -1,5 +1,5 @@
-import {Assertions as assert} from '../utils/assertions.ts';
-import {PinSet} from 'greco://gpio';
+import { Assertions as assert } from '../utils/assertions';
+import { PinSet } from 'greco://gpio';
 
 // todo ServoDrivers
 // ServoDriver (SoftPwmDriver, PwmDriver, I2C?, AbstractDriverBoardDriver, PCA9685ServoDriver extends AbstractDriverBoardDriver, VirtualServoDriver
@@ -9,6 +9,12 @@ import {PinSet} from 'greco://gpio';
 * this class defines the parameters of a certain model servo
 **/
 export class ServoModel {
+    frequency: number;
+    fullLeftDutyCycle: number;
+    neutralDutyCycle: number;
+    fullRightDutyCycle: number;
+    rangeDegrees: number;
+    maxRangeMotionSeconds: number;
     /**
     * Construct a new ServoModel
     * @param {Number} frequency the frequency on which the servo operates in Hz, defaults to 50
@@ -18,7 +24,14 @@ export class ServoModel {
     * @param {Number} rangeDegrees the number of degrees the servo can rotate, defaults to 180
     * @param {Number} maxRangeMotionSeconds the number of seconds it takes the servo to move from full left to full right position, this is used to calculate when motion is actually done
     **/
-    constructor(frequency = 50, fullLeftDutyCycle = 5, neutralDutyCycle = 7.5, fullRightDutyCycle = 10, rangeDegrees = 180, maxRangeMotionSeconds = 0.35) {
+    constructor(
+        frequency: number = 50,
+        fullLeftDutyCycle: number = 5,
+        neutralDutyCycle: number = 7.5,
+        fullRightDutyCycle: number = 10,
+        rangeDegrees: number = 180,
+        maxRangeMotionSeconds: number = 0.35
+    ) {
 
         assert.is_number(frequency, "frequency should be a positive Number between 0 and 2000");
         assert.is_number(fullLeftDutyCycle, "fullLeftDutyCycle should be a Number between 0 and 100");
@@ -79,7 +92,7 @@ export class ServoDriver {
     * move the servo to a certain angle
     * @param {Number} degrees where neutral = 0 and left is a negative number and right is a positive number
     */
-    async angle(degrees = 0) {
+    async angle(degrees: number = 0) {
         throw Error("unimplemented");
     }
 
@@ -89,6 +102,10 @@ export class ServoDriver {
 }
 
 export class SoftPwmDriver extends ServoDriver {
+    servoModel: ServoModel;
+    chip: string;
+    pinNum: number;
+    pinSet: PinSet;
 
     /**
     * init a new SoftPwmDriver
@@ -96,7 +113,7 @@ export class SoftPwmDriver extends ServoDriver {
     * @param {Number} pinNum
     * @param {ServoModel} servoModel
     */
-    constructor(chip = '/dev/gpiochip0', pinNum = 18, servoModel) {
+    constructor(chip: string = '/dev/gpiochip0', pinNum: number = 18, servoModel: ServoModel) {
         super();
         assert.is_string(chip, "chip should be a String like \"/dev/gpiochip0\"");
         assert.is_number(pinNum, "pinNum should be a positive Number");
@@ -117,12 +134,12 @@ export class SoftPwmDriver extends ServoDriver {
         await this.pinSet.init(this.chip, 'out', [this.pinNum]);
     }
 
-    softPwm(frequency, dutyCycle) {
+    softPwm(frequency: number, dutyCycle: number) {
         console.trace("softPwm %s, %s", frequency, dutyCycle);
         this.pinSet.softPwm(frequency, dutyCycle);
         // todo calc
         let time = this.servoModel.maxRangeMotionSeconds * 1000;
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve, _reject) => {
             setTimeout(resolve, time);
         });
     }
@@ -143,11 +160,11 @@ export class SoftPwmDriver extends ServoDriver {
     * move the servo to a certain angle
     * @param {Number} degrees where neutral = 0 and left is a negative number and right is a positive number
     */
-    async angle(degrees = 0) {
+    async angle(degrees: number = 0) {
         throw Error("unimplemented");
     }
 
-    async off(){
+    async off() {
         await this.pinSet.softPwmOff();
     }
 }
@@ -157,12 +174,13 @@ export class SoftPwmDriver extends ServoDriver {
 * @description represents an abstract Servo motor which can be positioned
 **/
 export class Servo {
+    driver: ServoDriver;
 
     /**
     * @constructor
     * @param {ServoDriver} driver the driver to use for this Servo
     */
-    constructor(driver) {
+    constructor(driver: ServoDriver) {
         assert.is_instance_of(driver, ServoDriver, "driver should be an instance of ServoDriver");
         this.driver = driver;
     }
@@ -199,14 +217,14 @@ export class Servo {
     * move the servo to a certain angle
     * @param {Number} degrees where neutral = 0 and left is a negative number and right is a positive number
     */
-    async angle(degrees = 0) {
-         await this.driver.angle(degrees);
+    async angle(degrees: number = 0) {
+        await this.driver.angle(degrees);
     }
 
     /**
     * turn of the pwm signal (this will NOT reposition the servo to its neutral position)
     */
-    async off(){
+    async off() {
         await this.driver.off();
     }
 }

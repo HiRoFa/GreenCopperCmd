@@ -1,5 +1,5 @@
-import {Assertions as assert} from '../utils/assertions.ts';
-import {PinSet} from 'greco://gpio';
+import { Assertions as assert } from '../utils/assertions';
+import { PinSet } from 'greco://gpio';
 
 // NB, todo: this should inherit a lot from Stepper
 

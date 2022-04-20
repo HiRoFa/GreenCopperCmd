@@ -1,5 +1,5 @@
-import {Assertions as assert} from '../utils/assertions.mes';
-import {PinSet} from 'greco://gpio';
+import { Assertions as assert } from '../utils/assertions';
+import { PinSet } from 'greco://gpio';
 
 // todo init with a StepperDriver class, (FourPinStepperDriver(a, b, c, d), ThreePinStepperDriver(enable, dir, pulse), VirtualStepperDriver)
 
@@ -28,7 +28,7 @@ export class FourPinGPIOStepperDriver extends StepperDriver {
     }
 }
 
-export class ThreePinGPIOStepperDriver extend StepperDriver {
+export class ThreePinGPIOStepperDriver extends StepperDriver {
     constructor(chip = '/dev/gpiochip0', pinNumEnable, pinNumPulse, pinNumDirection, sequencesPerRevolution = 509.4716) {
         super();
     }
@@ -44,8 +44,25 @@ export class VirtualStepperDriver extends StepperDriver {
 
 }
 
+export type Sequence = Array<Array<number>>;
+
 export class Stepper {
-    constructor(pinSet, sequencesPerRevolution) {
+    pinSet: PinSet;
+    sequencesPerRevolution: number;
+    numSequenceForwarded: number;
+
+    static SINGLE_STEP: number = 0;
+    static DOUBLE_STEP: number = 1;
+    static HALF_STEP: number = 2;
+
+    static SEQUENCE_SINGLE_FORWARD: Sequence = [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]];
+    static SEQUENCE_DOUBLE_FORWARD: Sequence = [[1, 1, 0, 0], [0, 1, 1, 0], [0, 0, 1, 1], [1, 0, 0, 1]];
+    static SEQUENCE_HALF_FORWARD: Sequence = [[1, 0, 0, 0], [1, 1, 0, 0], [0, 1, 0, 0], [0, 1, 1, 0], [0, 0, 1, 0], [0, 0, 1, 1], [0, 0, 0, 1], [1, 0, 0, 1]];
+    static SEQUENCE_SINGLE_BACKWARD: Sequence = [[0, 0, 0, 1], [0, 0, 1, 0], [0, 1, 0, 0], [1, 0, 0, 0]];
+    static SEQUENCE_DOUBLE_BACKWARD: Sequence = [[1, 0, 0, 1], [0, 0, 1, 1], [0, 1, 1, 0], [1, 1, 0, 0]];
+    static SEQUENCE_HALF_BACKWARD: Sequence = [[1, 0, 0, 1], [0, 0, 0, 1], [0, 0, 1, 1], [0, 0, 1, 0], [0, 1, 1, 0], [0, 1, 0, 0], [1, 1, 0, 0], [1, 0, 0, 0]];
+
+    constructor(pinSet: PinSet, sequencesPerRevolution: number) {
         this.pinSet = pinSet;
         this.sequencesPerRevolution = sequencesPerRevolution;
         this.setZero();
@@ -54,7 +71,7 @@ export class Stepper {
     /**
     * init a new Stepper
     */
-    static async init(chip = '/dev/gpiochip0', pinNum0, pinNum1, pinNum2, pinNum3, sequencesPerRevolution = 509.4716) {
+    static async init(chip: string = '/dev/gpiochip0', pinNum0: number, pinNum1: number, pinNum2: number, pinNum3: number, sequencesPerRevolution: number = 509.4716) {
 
         assert.is_string(chip, "chip should be a string like '/dev/gpiochip0'");
         assert.is_number(pinNum0, "pinNum0 should be a number");
@@ -108,23 +125,23 @@ export class Stepper {
 
         assert.is_true(sequence === 0 || sequence === 1 || sequence === 2, "sequence should be one of Stepper.SINGLE_STEP, Stepper.DOUBLE_STEP or Stepper.HALF_STEP");
 
-        let s;
+        let s: Sequence;
         switch (sequence) {
             case Stepper.SINGLE_STEP:
-                s = forward?Stepper.SEQUENCE_SINGLE_FORWARD:Stepper.SEQUENCE_SINGLE_BACKWARD;
+                s = forward ? Stepper.SEQUENCE_SINGLE_FORWARD : Stepper.SEQUENCE_SINGLE_BACKWARD;
                 break;
             case Stepper.DOUBLE_STEP:
-                s = forward?Stepper.SEQUENCE_DOUBLE_FORWARD:Stepper.SEQUENCE_DOUBLE_BACKWARD;
+                s = forward ? Stepper.SEQUENCE_DOUBLE_FORWARD : Stepper.SEQUENCE_DOUBLE_BACKWARD;
                 break;
             case Stepper.HALF_STEP:
-                s = forward?Stepper.SEQUENCE_HALF_FORWARD:Stepper.SEQUENCE_HALF_BACKWARD;
+                s = forward ? Stepper.SEQUENCE_HALF_FORWARD : Stepper.SEQUENCE_HALF_BACKWARD;
                 break;
         }
         return this.pinSet.sequence(s, stepDelay, Math.round(sequenceCount))
-        .then((res) => {
-            this.numSequenceForwarded += forward?sequenceCount:-sequenceCount;
-            return res;
-        });
+            .then((res: any) => {
+                this.numSequenceForwarded += forward ? sequenceCount : -sequenceCount;
+                return res;
+            });
     }
 
     /**
@@ -163,13 +180,3 @@ export class Stepper {
     }
 }
 
-Stepper.SINGLE_STEP = 0;
-Stepper.DOUBLE_STEP = 1;
-Stepper.HALF_STEP = 2;
-
-Stepper.SEQUENCE_SINGLE_FORWARD = [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]];
-Stepper.SEQUENCE_DOUBLE_FORWARD = [[1, 1, 0, 0], [0, 1, 1, 0], [0, 0, 1, 1], [1, 0, 0, 1]];
-Stepper.SEQUENCE_HALF_FORWARD = [[1, 0, 0, 0], [1, 1, 0, 0], [0, 1, 0, 0], [0, 1, 1, 0], [0, 0, 1, 0], [0, 0, 1, 1], [0, 0, 0, 1], [1, 0, 0, 1]];
-Stepper.SEQUENCE_SINGLE_BACKWARD = [[0, 0, 0, 1], [0, 0, 1, 0], [0, 1, 0, 0], [1, 0, 0, 0]];
-Stepper.SEQUENCE_DOUBLE_BACKWARD = [[1, 0, 0, 1], [0, 0, 1, 1], [0, 1, 1, 0], [1, 1, 0, 0]];
-Stepper.SEQUENCE_HALF_BACKWARD = [[1, 0, 0, 1], [0, 0, 0, 1], [0, 0, 1, 1], [0, 0, 1, 0], [0, 1, 1, 0], [0, 1, 0, 0], [1, 1, 0, 0], [1, 0, 0, 0]];
