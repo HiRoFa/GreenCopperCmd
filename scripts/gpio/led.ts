@@ -1,15 +1,16 @@
-import {Assertions as assert} from '../utils/assertions.mes';
-import {PinSet} from 'greco://gpio';
+import { Assertions as assert } from '../utils/assertions';
+import { PinSet } from './pinset';
 
 export class Led {
-    constructor(pinSet) {
+    pinSet: PinSet;
+    constructor(pinSet: PinSet) {
         this.pinSet = pinSet;
     }
 
     /**
     * init a new Led
     */
-    static async init(chip, pinNum) {
+    static async init(chip: string, pinNum: number) {
 
         assert.is_string(chip, "chip should be a string like '/dev/gpiochip0'");
         assert.is_number(pinNum, "pinNum should be a number");
@@ -17,9 +18,9 @@ export class Led {
         let pinSet = new PinSet();
         let instance = new this(pinSet);
         return instance.pinSet.init(chip, 'out', [pinNum])
-        .then(() => {
-            return instance;
-        });
+            .then(() => {
+                return instance;
+            });
     }
 
     /**

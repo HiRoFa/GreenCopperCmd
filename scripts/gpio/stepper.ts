@@ -1,5 +1,5 @@
 import { Assertions as assert } from '../utils/assertions';
-import { PinSet } from 'greco://gpio';
+import { PinSet } from './pinset';
 
 // todo init with a StepperDriver class, (FourPinStepperDriver(a, b, c, d), ThreePinStepperDriver(enable, dir, pulse), VirtualStepperDriver)
 

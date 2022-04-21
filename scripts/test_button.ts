@@ -4,7 +4,7 @@ let global = this;
 async function test_gpio_in() {
     console.log('init pins');
 
-    let gpio_mod = await import('greco://gpio');
+    let gpio_mod = await import('./gpio/pinset');
 
     global.pin_set = new gpio_mod.PinSet();
 

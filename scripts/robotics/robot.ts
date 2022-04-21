@@ -164,8 +164,8 @@ export class StepperAxis extends AbstractAxis {
     constructor(
         stepper: Stepper,
         gearReduction: number,
-        leftEndSwitch: Button,
-        rightEndSwitch: Button,
+        leftEndSwitch: null | Button,
+        rightEndSwitch: null | Button,
         maxRightAngle: number
     ) {
         super(leftEndSwitch, rightEndSwitch, maxRightAngle);
@@ -297,15 +297,12 @@ export class LinearGripper extends Gripper {
 
 export class VGripper extends Gripper {
     armLength: number;
-    maxOpenSequences: number;
-    constructor(axis: AbstractAxis, armLength: number, maxOpenSequences: number) {
+    constructor(axis: AbstractAxis, armLength: number) {
         super(axis);
 
         assert.is_number(armLength, "armLength should be a number (in mm)");
-        assert.is_number(maxOpenSequences, "maxOpenSequences should be a number (number of sequences to fully open)");
 
         this.armLength = armLength;
-        this.maxOpenSequences = maxOpenSequences;
     }
 
     async openTo(openingMm = 0) {

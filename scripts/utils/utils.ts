@@ -6,8 +6,8 @@ export class Utils {
         // todo
     }
 
-    static awaitAll(...args) {
-        return Promise.all(args.flat());
+    static awaitAll<T>(...args: Array<Promise<T>>): Promise<Array<T>> {
+        return Promise.all(args);
     }
 
 }

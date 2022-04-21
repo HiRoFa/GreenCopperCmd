@@ -1,15 +1,14 @@
 import { Utils as utils } from './utils/utils';
+import * as servoMod from './gpio/servo';
+import * as robotics from './robotics/robot';
 
 async function initRobot() {
-    // import robotics module
-    let robotics = await import('./robotics/robot');
-
 
     // init steppers and servos
     let [baseStepper, lowerArmStepper, upperArmStepper] = await utils.awaitAll(
-        robotics.Stepper.init('/dev/gpiochip0', [23, 24, 25, 4]),
-        robotics.Stepper.init('/dev/gpiochip0', [17, 18, 27, 22]),
-        robotics.Stepper.init('/dev/gpiochip0', [13, 12, 6, 5])
+        robotics.Stepper.init('/dev/gpiochip0', 23, 24, 25, 4),
+        robotics.Stepper.init('/dev/gpiochip0', 17, 18, 27, 22),
+        robotics.Stepper.init('/dev/gpiochip0', 13, 12, 6, 5)
     );
 
     let servoDriver = new servoMod.SoftPwmDriver("/dev/gpiochip0", 20, servoMod.MG90SServo);
@@ -17,10 +16,10 @@ async function initRobot() {
     await gripperServo.init();
 
     // create axis with gearReductions
-    let baseAxis = new robotics.StepperAxis(baseStepper, 2);
-    let lowerArmAxis = new robotics.StepperAxis(lowerArmStepper, 3);
-    let upperArmAxis = new robotics.StepperAxis(upperArmStepper, 3);
-    let gripperAxis = new robotics.ServoAxis(gripperServo);
+    let baseAxis = new robotics.StepperAxis(baseStepper, 2, null, null, 180);
+    let lowerArmAxis = new robotics.StepperAxis(lowerArmStepper, 3, null, null, 90);
+    let upperArmAxis = new robotics.StepperAxis(upperArmStepper, 3, null, null, 90);
+    let gripperAxis = new robotics.ServoAxis(gripperServo, null, null, 45);
 
     // create arms with lengths
     let lowerArm = new robotics.Arm(lowerArmAxis, 80);

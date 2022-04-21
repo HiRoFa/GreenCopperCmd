@@ -1,5 +1,5 @@
 import { Assertions as assert } from '../utils/assertions';
-import { PinSet } from 'greco://gpio';
+import { PinSet } from './pinset';
 
 // todo ServoDrivers
 // ServoDriver (SoftPwmDriver, PwmDriver, I2C?, AbstractDriverBoardDriver, PCA9685ServoDriver extends AbstractDriverBoardDriver, VirtualServoDriver
