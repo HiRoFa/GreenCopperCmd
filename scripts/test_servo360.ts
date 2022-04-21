@@ -5,7 +5,7 @@
 import { PinSet } from './gpio/pinset';
 
 /*
-
+import { PinSet } from './scripts/gpio/pinset';
 async function softPwm(pinSet: PinSet, frequency: number, dutyCycle: number, duration: number): Promise<void> {
     console.trace("softPwm %s, %s", frequency, dutyCycle);
     pinSet.softPwm(frequency, dutyCycle);
@@ -51,9 +51,9 @@ async function test() {
     console.log("slow right");
     await servo.right(5, 1000);
 
-    console.log("25% left");
+    console.log("25 percent left");
     await servo.left(25, 1000);
-    console.log("25% right");
+    console.log("25 percent right");
     await servo.right(25, 1000);
 
     console.log("max left");
