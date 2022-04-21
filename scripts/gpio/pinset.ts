@@ -22,7 +22,7 @@ export class PinSet {
 
     async softPwm(frequency: number, dutyCycle: number, duration?: number): Promise<void> {
 
-        console.trace("PinSet.softPwm(%s, %s) duration=%s", frequency, dutyCycle, duration);
+        console.log("PinSet.softPwm(%s, %s) duration=%s", frequency, dutyCycle, duration);
         await this.pinSet.softPwm(frequency, dutyCycle);
 
         if (duration) {
