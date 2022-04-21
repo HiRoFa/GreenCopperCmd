@@ -103,7 +103,7 @@ export class SoftPwm360Driver extends Servo360Driver {
         } else {
             let dif = this.servoModel.minSpeedDutyCycleLeft - this.servoModel.maxSpeedDutyCycleLeft;
             let part = dif / 95;
-            dc = this.servoModel.maxSpeedDutyCycleLeft - (part * speedPercentage);
+            dc = this.servoModel.minSpeedDutyCycleLeft - (part * speedPercentage);
         }
         await this.pinSet.softPwm(freq, dc, duration);
     }
