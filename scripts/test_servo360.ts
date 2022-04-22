@@ -48,28 +48,30 @@ async function test() {
     await servo.init();
 
     console.log("slow left");
-    await servo.left(5, 1000);
+    await servo.left(5, undefined, 1000);
     console.log("slow right");
-    await servo.right(5, 1000);
+    await servo.right(5, undefined, 1000);
 
     console.log("25 percent left");
-    await servo.left(25, 1000);
+    await servo.left(25, undefined, 1000);
     console.log("25 percent right");
-    await servo.right(25, 1000);
+    await servo.right(25, undefined, 1000);
 
     console.log("max left");
-    await servo.left(100, 1000);
+    await servo.left(100, undefined, 1000);
     console.log("max right");
-    await servo.right(100, 1000);
+    await servo.right(100, undefined, 1000);
     await servo.off();
 
-    let driver = servo.driver as SoftPwm360Driver;
-
     for (let x = 0; x < 10; x++) {
-        console.log("100 steps left");
-        await driver.pinSet.softPwm(50, 4.5, 100);
-        console.log("100 steps right");
-        await driver.pinSet.softPwm(50, 9.5, 100);
+        console.log("200 steps left");
+        await servo.left(100, 200);
+        console.log("200 steps right");
+        await servo.right(100, 200);
+        console.log("200 steps left slow");
+        await servo.left(10, 200);
+        console.log("200 steps right slow");
+        await servo.right(10, 200);
     }
 };
 

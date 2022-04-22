@@ -36,8 +36,8 @@ export type SpeedPercentage = 5 | 10 | 15 | 20 | 25 | 30 | 35 | 40 | 45 | 50 | 5
 export abstract class Servo360Driver {
     abstract init(): Promise<void>
 
-    abstract left(speedPercentage: SpeedPercentage, duration?: number): Promise<void>;
-    abstract right(speedPercentage: SpeedPercentage, duration?: number): Promise<void>;
+    abstract left(speedPercentage: SpeedPercentage, pulseCount?: number, duration?: number): Promise<void>;
+    abstract right(speedPercentage: SpeedPercentage, pulseCount?: number, duration?: number): Promise<void>;
 
     abstract off(): Promise<void>
 }
@@ -77,7 +77,7 @@ export class SoftPwm360Driver extends Servo360Driver {
         await this.pinSet.init(this.chip, 'out', [this.pinNum]);
     }
 
-    async right(speedPercentage: SpeedPercentage, duration?: number): Promise<void> {
+    async right(speedPercentage: SpeedPercentage, pulseCount?: number, duration?: number): Promise<void> {
         let freq = this.servoModel.frequency;
         let dc: number;
         if (speedPercentage === 100) {
@@ -89,11 +89,11 @@ export class SoftPwm360Driver extends Servo360Driver {
             let part = dif / 95;
             dc = this.servoModel.minSpeedDutyCycleRight + (part * speedPercentage);
         }
-        await this.pinSet.softPwm(freq, dc, undefined, duration);
+        await this.pinSet.softPwm(freq, dc, pulseCount, duration);
 
     }
 
-    async left(speedPercentage: SpeedPercentage, duration?: number): Promise<void> {
+    async left(speedPercentage: SpeedPercentage, pulseCount?: number, duration?: number): Promise<void> {
         let freq = this.servoModel.frequency;
         let dc: number;
         if (speedPercentage === 100) {
@@ -105,7 +105,7 @@ export class SoftPwm360Driver extends Servo360Driver {
             let part = dif / 95;
             dc = this.servoModel.minSpeedDutyCycleLeft - (part * speedPercentage);
         }
-        await this.pinSet.softPwm(freq, dc, undefined, duration);
+        await this.pinSet.softPwm(freq, dc, pulseCount, duration);
     }
 
 
@@ -134,11 +134,11 @@ export class Servo360 {
         await this.driver.init();
     }
 
-    async right(speedPercentage: SpeedPercentage, duration?: number): Promise<void> {
-        await this.driver.right(speedPercentage, duration);
+    async right(speedPercentage: SpeedPercentage, pulseCount?: number, duration?: number): Promise<void> {
+        await this.driver.right(speedPercentage, pulseCount, duration);
     }
-    async left(speedPercentage: SpeedPercentage, duration?: number): Promise<void> {
-        await this.driver.left(speedPercentage, duration);
+    async left(speedPercentage: SpeedPercentage, pulseCount?: number, duration?: number): Promise<void> {
+        await this.driver.left(speedPercentage, pulseCount, duration);
     }
     async off(): Promise<void> {
         await this.driver.off();
