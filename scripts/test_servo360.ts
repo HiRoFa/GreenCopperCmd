@@ -3,6 +3,7 @@
 //Wanneer het hoge niveau 1 ms - 1,5 ms is, roteert de servo naar voren (de rotatiesnelheid is het snelst wanneer het 1 ms is, hoe hoger hoe lager, de servo stopt met draaien bij het bereiken van 1,5 ms).
 
 import { PinSet } from './gpio/pinset';
+import { SoftPwm360Driver } from './gpio/servo360';
 
 /*
 import { PinSet } from './scripts/gpio/pinset';
@@ -62,6 +63,14 @@ async function test() {
     await servo.right(100, 1000);
     await servo.off();
 
+    let driver = servo.driver as SoftPwm360Driver;
+
+    for (let x = 0; x < 10; x++) {
+        console.log("100 steps left");
+        await driver.pinSet.softPwm(50, 4.5, 100);
+        console.log("100 steps right");
+        await driver.pinSet.softPwm(50, 9.5, 100);
+    }
 };
 
 console.log("starting");

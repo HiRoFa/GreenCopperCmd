@@ -136,12 +136,8 @@ export class SoftPwmDriver extends ServoDriver {
 
     async softPwm(frequency: number, dutyCycle: number): Promise<void> {
         console.trace("softPwm %s, %s", frequency, dutyCycle);
-        this.pinSet.softPwm(frequency, dutyCycle);
-        // todo calc
         let time = this.servoModel.maxRangeMotionSeconds * 1000;
-        return new Promise((resolve, _reject) => {
-            setTimeout(resolve, time);
-        });
+        await this.pinSet.softPwm(frequency, dutyCycle, undefined, time);
     }
 
     async left() {

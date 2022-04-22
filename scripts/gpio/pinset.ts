@@ -1,4 +1,5 @@
 import * as grecoGpio from 'greco://gpio';
+import { Assertions } from '../utils/assertions';
 
 // this class serves as a wrapper for the gpio feature of greco so we  have autcomplete in ts modules etc
 
@@ -20,12 +21,17 @@ export class PinSet {
         await this.pinSet.softPwmOff();
     }
 
-    async softPwm(frequency: number, dutyCycle: number, duration?: number): Promise<void> {
+    async softPwm(frequency: number, dutyCycle: number, pulseCount?: number, duration?: number): Promise<void> {
 
-        console.log("PinSet.softPwm(%s, %s) duration=%s", frequency, dutyCycle, duration);
-        await this.pinSet.softPwm(frequency, dutyCycle);
+        console.log("PinSet.softPwm(%s, %s, %s) duration=%s", frequency, dutyCycle, pulseCount, duration);
+        let p = this.pinSet.softPwm(frequency, dutyCycle, pulseCount);
 
-        if (duration) {
+        Assertions.is_true(!(pulseCount && duration), "cannot have both pulseCount AND duration");
+
+        if (pulseCount) {
+            // NB! if there is no pulse_count then awaiting the promise will never resolve
+            await p;
+        } else if (duration) {
             return new Promise((resolve) => {
                 setTimeout(async () => {
                     await this.softPwmOff();
