@@ -1,7 +1,7 @@
 async function test() {
     let servoMod = await import('./gpio/servo');
 
-    let servoDriver = new servoMod.SoftPwmDriver("/dev/gpiochip0", 12, servoMod.MG90SServo);
+    let servoDriver = new servoMod.SoftPwmDriver("/dev/gpiochip0", 21, servoMod.MG90SServo);
     let servo = new servoMod.Servo(servoDriver);
     await servo.init();
 
