@@ -1,3 +1,13 @@
+/*
+ (async () => {
+        let pinSetMod = await import("./scripts/gpio/pinset");
+        let pinSet = new pinSetMod.PinSet();
+        await pinSet.init('/dev/gpiochip0', 'out', [12]);
+        await pinSet.softPwm(50, 5, 500);
+        await pinSet.softPwm(50, 10, 500);
+
+*/
+
 async function test() {
     let servoMod = await import('./gpio/servo');
 
