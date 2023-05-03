@@ -7,13 +7,11 @@ use rustyline::error::ReadlineError;
 use rustyline::Editor;
 use std::fs;
 use green_copper_runtime::moduleloaders::{HttpModuleLoader, FileSystemModuleLoader};
-use hirofa_utils::js_utils::Script;
 use quickjs_runtime::quickjs_utils::modules::detect_module;
-use futures::executor::block_on;
-use hirofa_utils::js_utils::facades::{JsRuntimeBuilder, JsRuntimeFacade};
 use quickjs_runtime::builder::QuickJsRuntimeBuilder;
 use quickjs_runtime::facades::QuickJsRuntimeFacade;
-use hirofa_utils::js_utils::facades::values::JsValueFacade;
+use quickjs_runtime::jsutils::Script;
+use quickjs_runtime::values::JsValueFacade;
 use typescript_utils::TargetVersion;
 
 fn main() {
@@ -41,7 +39,7 @@ fn main() {
         .validate_content_type(false)
         .secure_only();
 
-    let ts_pp = typescript_utils::TypeScriptPreProcessor::new(TargetVersion::Es2020, false, false);
+    let ts_pp = typescript_utils::TypeScriptPreProcessor::new(TargetVersion::Es2020, false, false, false);
 
     let rt_builder = QuickJsRuntimeBuilder::new()
         .js_script_module_loader(fsl)
@@ -65,10 +63,10 @@ fn main() {
 
                 let res = match is_module {
                     true => {
-                        rt.eval_module_sync(Script::new(format!("file:///{}", file_name_string.as_str()).as_str(), contents.as_str()))
+                        rt.eval_module_sync(None, Script::new(format!("file:///{}", file_name_string.as_str()).as_str(), contents.as_str()))
                     }
                     false => {
-                        rt.eval_sync(Script::new(format!("file:///{}", file_name_string.as_str()).as_str(), contents.as_str()))
+                        rt.eval_sync(None, Script::new(format!("file:///{}", file_name_string.as_str()).as_str(), contents.as_str()))
                     }
                 };
 
@@ -106,10 +104,10 @@ fn interactive_mode(rt: &QuickJsRuntimeFacade) {
 
                 let res = match is_module {
                     true => {
-                        block_on(rt.js_eval_module(None, Script::new("file:///input.ts", line.as_str()))).map(|_| JsValueFacade::Null)
+                        rt.eval_module_sync(None, Script::new("file:///input.ts", line.as_str())).map(|_| JsValueFacade::Null)
                     }
                     false => {
-                        block_on(rt.js_eval(None, Script::new("file:///input.ts", line.as_str())))
+                        rt.eval_sync(None, Script::new("file:///input.ts", line.as_str()))
                     }
                 };
 

@@ -14,8 +14,9 @@ green_copper_runtime =  { git = 'https://github.com/HiRoFa/GreenCopperRuntime', 
 #quickjs_runtime =  { path = '../quickjs_es_runtime'}
 quickjs_runtime = { git = 'https://github.com/HiRoFa/quickjs_es_runtime' }
 #hirofa_utils = "0.6"
-hirofa_utils = { git = 'https://github.com/HiRoFa/utils' }
+#hirofa_utils = { git = 'https://github.com/HiRoFa/utils' }
 typescript_utils = { git = 'https://github.com/HiRoFa/typescript_utils', branch='main'}
+#typescript_utils = { path = '../typescript_utils'}
 log = "0.4"
 simple_logger = {version = "2.1.0", features = []}
 cmdparser = "0.2.0"
