@@ -4,7 +4,7 @@ use cmdparser::Parser;
 use log::trace;
 use log::{error, LevelFilter};
 use rustyline::error::ReadlineError;
-use rustyline::Editor;
+use rustyline::{DefaultEditor};
 use std::fs;
 use green_copper_runtime::moduleloaders::{HttpModuleLoader, FileSystemModuleLoader};
 use quickjs_runtime::quickjs_utils::modules::detect_module;
@@ -89,16 +89,16 @@ fn main() {
 fn interactive_mode(rt: &QuickJsRuntimeFacade) {
     println!("press CTRL-D or CTRL-C to exit GreCo...");
 
-    let mut rl = Editor::<()>::new();
-    if rl.load_history("greco_history.txt").is_err() {
-        // println!("No previous history.");
+    let mut rl = DefaultEditor::new().expect("invalid state for RustyLine");
+    if rl.load_history("history.txt").is_err() {
+        //println!("No previous history.");
     }
 
     loop {
         let readline = rl.readline(">> ");
         match readline {
             Ok(line) => {
-                rl.add_history_entry(line.as_str());
+                let _ = rl.add_history_entry(line.as_str());
 
                 let is_module = detect_module(line.as_str());
 
