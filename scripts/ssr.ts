@@ -3,14 +3,16 @@ import {React, ReactDOM, ReactDOMServer} from './deps';
 import * as htmlDom from 'greco://htmldom';
 
 let parser = new htmlDom.DOMParser();
-let html = "<html><body><div id='mydiv'></div></body></html>";
+let html = "<html><body><div id='mydiv'><i /></div></body></html>";
 let document = parser.parseFromString(html);
 
 globalThis.window = {
-    document
+    document,
+    HTMLIFrameElement: function(){}
 };
 globalThis.Element = greco.htmldom.Node;
 globalThis.document = document;
+globalThis.HTMLIFrameElement = function(){};
 window.Element = greco.htmldom.Node;
 
 

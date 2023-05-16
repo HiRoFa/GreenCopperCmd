@@ -42,9 +42,9 @@ fn main() {
     let ts_pp = typescript_utils::TypeScriptPreProcessor::new(TargetVersion::Es2020, false, false, false);
 
     let rt_builder = QuickJsRuntimeBuilder::new()
-        .js_script_module_loader(fsl)
-        .js_script_module_loader(wsl)
-        .js_script_pre_processor(ts_pp);
+        .script_module_loader(fsl)
+        .script_module_loader(wsl)
+        .script_pre_processor(ts_pp);
 
     // todo greco should add a httpsecurity module to the builder
     // or a httpclientfactory, used for modules an fetch (or split those two so we can prevent modules being loaded from a data provider)
