@@ -2,6 +2,8 @@ import {React, ReactDOM, ReactDOMServer} from './deps';
 
 import * as htmlDom from 'greco://htmldom';
 
+
+/*
 let parser = new htmlDom.DOMParser();
 let html = "<html><body><div id='mydiv'><i /></div></body></html>";
 let document = parser.parseFromString(html);
@@ -14,29 +16,31 @@ globalThis.Element = greco.htmldom.Node;
 globalThis.document = document;
 globalThis.HTMLIFrameElement = function(){};
 window.Element = greco.htmldom.Node;
-
+*/
 
 function Button(args: {hud: string, hid: string}){
-    return <input type="button">Hello World!</input>;
+    return <b className="MyButton" hid={args.hid} hud={args.hud}>Hello World!</b>;
 }
 
-function DangerButton() {
+function DangerButtons() {
     let id = new Date().getTime();
     return <i><Button color="red" hid={id} /><Button color="blue" hud={id} /></i>;
 }
 
+/*
+
 const container = document.querySelector('#mydiv');
 
-/* todo this errors because
-
- no handler found for proxy_instance_set_prop: __reactContainer$8441027117998732
- so impl default catchall getter/setter and store props in instance obj somewhere
-
-*/
 
 ReactDOM.hydrate(
-  <DangerButton />,
+  <DangerButtons />,
   container
 );
 
-console.log('html=\n%s', container.outerHTML);
+console.log('html=\n%s', document.outerHTML);
+
+*/
+
+const ssrStr = ReactDOMServer.renderToString(<DangerButtons />);
+
+console.log("ssr=\n%s", ssrStr);

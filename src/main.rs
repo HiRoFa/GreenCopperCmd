@@ -5,7 +5,7 @@ use log::trace;
 use log::{error, LevelFilter};
 use rustyline::error::ReadlineError;
 use rustyline::{DefaultEditor};
-use std::fs;
+use std::{fs, panic};
 use green_copper_runtime::moduleloaders::{HttpModuleLoader, FileSystemModuleLoader};
 use quickjs_runtime::quickjs_utils::modules::detect_module;
 use quickjs_runtime::builder::QuickJsRuntimeBuilder;
@@ -13,8 +13,19 @@ use quickjs_runtime::facades::QuickJsRuntimeFacade;
 use quickjs_runtime::jsutils::Script;
 use quickjs_runtime::values::JsValueFacade;
 use typescript_utils::TargetVersion;
+use backtrace::Backtrace;
 
 fn main() {
+
+    panic::set_hook(Box::new(|panic_info| {
+        let backtrace = Backtrace::new();
+        println!("thread panic occurred: {panic_info}\nbacktrace: {backtrace:?}");
+        log::error!(
+                "thread panic occurred: {}\nbacktrace: {:?}",
+                panic_info,
+                backtrace
+            );
+    }));
 
     let (arguments, flags) = Parser::new().merge_values(true).parse();
 
