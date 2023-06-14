@@ -12,7 +12,6 @@ use quickjs_runtime::builder::QuickJsRuntimeBuilder;
 use quickjs_runtime::facades::QuickJsRuntimeFacade;
 use quickjs_runtime::jsutils::Script;
 use quickjs_runtime::values::JsValueFacade;
-use typescript_utils::TargetVersion;
 use backtrace::Backtrace;
 
 fn main() {
@@ -50,12 +49,11 @@ fn main() {
         .validate_content_type(false)
         .secure_only();
 
-    let ts_pp = typescript_utils::TypeScriptPreProcessor::new(TargetVersion::Es2020, false, false, false);
+
 
     let rt_builder = QuickJsRuntimeBuilder::new()
         .script_module_loader(fsl)
-        .script_module_loader(wsl)
-        .script_pre_processor(ts_pp);
+        .script_module_loader(wsl);
 
     // todo greco should add a httpsecurity module to the builder
     // or a httpclientfactory, used for modules an fetch (or split those two so we can prevent modules being loaded from a data provider)
